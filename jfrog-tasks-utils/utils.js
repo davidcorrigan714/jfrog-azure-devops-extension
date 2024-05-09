@@ -195,16 +195,16 @@ async function getAccessTokenWithOIDForEndpoint(endpoint_name, provider_name, en
     const oidcClaims = JSON.parse(Buffer.from(oidcTokenParts[1], 'base64').toString());
 
     // Log the OIDC token claims so users know how to configure AWS
-    console.log("OIDC Token Subject: ", oidcClaims.sub);
+    console.log('OIDC Token Subject: ', oidcClaims.sub);
     console.log(`OIDC Token Claims: {"sub": "${oidcClaims.sub}"}`);
-    console.log("OIDC Token Issuer (Provider URL): ", oidcClaims.iss);
-    console.log("OIDC Token Audience: ", oidcClaims.aud);
+    console.log('OIDC Token Issuer (Provider URL): ', oidcClaims.iss);
+    console.log('OIDC Token Audience: ', oidcClaims.aud);
 
     const artifactoryTokenRequestBoth = {
-        "grant_type": "urn:ietf:params:oauth:grant-type:token-exchange",
-        "subject_token_type": "urn:ietf:params:oauth:token-type:id_token",
-        "subject_token": adoToken,
-        "provider_name": provider_name
+        grant_type: 'urn:ietf:params:oauth:grant-type:token-exchange',
+        subject_token_type: 'urn:ietf:params:oauth:token-type:id_token',
+        subject_token: adoToken,
+        provider_name: provider_name,
     };
 
     let token_server = auth_server ? auth_server : endpoint_server;
@@ -212,7 +212,7 @@ async function getAccessTokenWithOIDForEndpoint(endpoint_name, provider_name, en
     let response = await fetch(`${token_server}/access/api/v1/oidc/token`, {
         method: 'post',
         body: JSON.stringify(artifactoryTokenRequestBoth),
-        headers: { 'Content-Type': 'application/json' }
+        headers: { 'Content-Type': 'application/json' },
     });
     const data = await response.json();
     console.log(`JFrog access token acquired, expires in ${(data.expires_in / 60).toFixed(2)} minutes.`);
@@ -221,12 +221,12 @@ async function getAccessTokenWithOIDForEndpoint(endpoint_name, provider_name, en
 }
 
 async function getOidcTokenForEndpoint(endpoint_name) {
-    const jobId = getVariableRequired("System.JobId");
-    const planId = getVariableRequired("System.PlanId");
-    const projectId = getVariableRequired("System.TeamProjectId");
-    const hub = getVariableRequired("System.HostType");
-    const uri = getVariableRequired("System.CollectionUri");
-    const token = getVariableRequired("System.AccessToken");
+    const jobId = getVariableRequired('System.JobId');
+    const planId = getVariableRequired('System.PlanId');
+    const projectId = getVariableRequired('System.TeamProjectId');
+    const hub = getVariableRequired('System.HostType');
+    const uri = getVariableRequired('System.CollectionUri');
+    const token = getVariableRequired('System.AccessToken');
 
     const auth = azNodeLib.getBasicHandler('', token);
     const connection = new azNodeLib.WebApi(uri, auth);
@@ -239,12 +239,12 @@ async function getOidcTokenForEndpoint(endpoint_name) {
 }
 
 function getVariableRequired(name) {
-    const variable = tl.getVariable(name)
+    const variable = tl.getVariable(name);
     if (!variable) {
-        throw new Error(`Required variable '${name}' returned undefined!`)
+        throw new Error(`Required variable '${name}' returned undefined!`);
     }
 
-    return variable
+    return variable;
 }
 
 function generateDownloadCliErrorMessage(downloadUrl, cliVersion) {
